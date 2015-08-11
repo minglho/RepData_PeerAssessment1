@@ -1,0 +1,48 @@
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: yes
+---
+
+<!---
+Why is 'opt_chunk' not found?
+``{r setoptions, echo = FALSE}
+opts_chunk$set(echo = TRUE)
+```
+--> 
+
+## Loading and preprocessing the data
+
+```{r}
+dat <- read.csv("activity.csv", 
+                colClasses = c("integer", "Date", "integer"))
+```
+
+## What is mean total number of steps taken per day?
+
+```{r}
+dat.date <- split(dat, dat$date) #dat.date should be a list of dataframe.
+# x in the function below should be a dataframe, yet x is a list of 1 datdframe! 
+dailySteps <- lapply(dat.date, 
+                     function(x) {
+                        colSums(x[ ,"steps"], na.rm = TRUE)
+                         # Need to use x[[1]][ ,"steps"] to fix. Why???
+                     }
+              )         
+hist(dailySteps, main = "Daily Number of Steps")
+```
+
+The mean number of steps per day is `r mean(dailySteps)'.
+The median number of steps per day is 'median(dailySteps)'.
+
+
+## What is the average daily activity pattern?
+
+
+
+## Imputing missing values
+
+
+
+## Are there differences in activity patterns between weekdays and weekends?

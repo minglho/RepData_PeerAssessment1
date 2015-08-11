@@ -1,20 +1,12 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: yes
----
+# Reproducible Research: Peer Assessment 1
 
 
-```{r setoptions, echo = FALSE, results='hide'}
-library(knitr)
-opts_chunk$set(echo = TRUE, message = FALSE)
-```
+
 
 ## Loading and preprocessing the data
 
-```{r Prelim, results='hide'}
 
+```r
 ## Assume the data file is in current directory.
 ## Read the data file into the data frame 'dat'.
 ## See README.MD for code book.
@@ -28,8 +20,8 @@ library(lattice)    # For graphics
 
 ## What is mean total number of steps taken per day?
 
-```{r TotalStepsPerDay}
 
+```r
 ## Create an integer vector 'dailyStep'.
 ## Each element in 'dailyStep' represents the total number of
 ## steps taken in a particular day.
@@ -46,14 +38,16 @@ dailySteps <- as.integer(dailySteps)
 hist(dailySteps, main = "Daily Number of Steps, Removing NAs")
 ```
 
-The mean number of steps per day is `r sprintf("%.1f", mean(dailySteps))`.
-The median number of steps per day is `r sprintf("%.1f", median(dailySteps))`.
+![](PA1_template_files/figure-html/TotalStepsPerDay-1.png) 
+
+The mean number of steps per day is 9354.2.
+The median number of steps per day is 10395.0.
 
 
 ## What is the average daily activity pattern?
 
-```{r meanSteps}
 
+```r
 ## Create the data frame 'intervals' with these variables:
 ## * meanSteps: the mean steps in the same time interval over all days.
 ## * min: number of minutes since midnight at the start of the 
@@ -69,17 +63,21 @@ plot(intervals$min, intervals$meanSteps, type = "l",
      main = "Average Daily Activity Pattern",
      xlab = "Interval index (Number of minutes since midnight at the beginning of the 5-min interval)",
      ylab = "Mean number of steps")
+```
 
+![](PA1_template_files/figure-html/meanSteps-1.png) 
+
+```r
 maxIndex = which.max(intervals$meanSteps)
 ```
 
-The 5-min interval starting at `r intervals$min[maxIndex]` minutes after midnight
-has a mean of `r intervals$meanSteps[maxIndex]` steps, the maximum among all intervals.
+The 5-min interval starting at 515 minutes after midnight
+has a mean of 206.1698113 steps, the maximum among all intervals.
 
 ## Imputing missing values
 
-```{r missing_values_Prelim}
 
+```r
 t = table(is.na(dat$steps)) ## Table counting the number of NAs (TRUE) and values (FALSE)
 
 ## Add a variable 'steps.filled' to 'dat'. 'steps.filled' is the same as 'steps' when that 
@@ -99,9 +97,10 @@ for (i in 1:n){
 }
 ```
 
-The dataset contains `r as.integer(t["TRUE"])` rows with NAs.
+The dataset contains 2304 rows with NAs.
 
-```{r missing_values}
+
+```r
 ## Create an integer vector 'dailyStep.filled'.
 ## Each element in 'dailyStep.filled' represents the total number of
 ## steps taken in a particular day, after imputing missing values as above. 
@@ -118,20 +117,23 @@ dailySteps.filled <- as.integer(dailySteps.filled)
 hist(dailySteps.filled, main = "Daily Number of Steps, After imputing NAs")
 ```
 
+![](PA1_template_files/figure-html/missing_values-1.png) 
+
 After filling in missing data:  
 - The mean number of steps per day is 
-`r sprintf("%.1f", mean(dailySteps.filled))` vs 
-`r sprintf("%.1f", mean(dailySteps))` before.  
+10766.2 vs 
+9354.2 before.  
 - The median number of steps per day is 
-`r sprintf("%.1f", median(dailySteps.filled))` vs 
-`r sprintf("%.1f", median(dailySteps))` before.  
+10766.0 vs 
+10395.0 before.  
 - Imputing missing data increases the mean and the median.
 The distance between the mean and the median have closed up significantly 
 after imputing missing data.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r weekday_vs_weekend_prelim}
+
+```r
 ## Create the data frame 'intervals' with these variables:
 ## * meanSteps: the mean steps in the same time interval over all days.
 ## * min: number of minutes since midnight at the start of the 
@@ -171,7 +173,8 @@ intervals.wd <- mutate(intervals.wd, dayType = factor("Weekday"))
 intervals <- rbind(intervals.wd, intervals.we)
 ```
 
-```{r weekday_vs_weekend_plots}
+
+```r
 ## Plotting time series
 xyplot(meanSteps ~ min | dayType,
        data = intervals,
@@ -181,3 +184,5 @@ xyplot(meanSteps ~ min | dayType,
        xlab = "Interval index (Number of minutes since midnight at the beginning of the 5-min interval)",
        ylab = "Mean number of steps")
 ```
+
+![](PA1_template_files/figure-html/weekday_vs_weekend_plots-1.png) 
